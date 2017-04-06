@@ -1,14 +1,14 @@
 {
   "name": "amdi18n-loader",
   "version": "0.5.2",
-  "description": "webpack i18n loader similar to require.js i18n plugin",
+  "description": "webpack i18n loader similar to require.js i18n plugin that allows i18n files to be defined with nested objects",
   "main": "index.js",
   "scripts": {
     "test": "cd tests && ../node_modules/.bin/webpack && ../node_modules/.bin/mocha ../tests/main.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/futuweb/webpack-amdi18n-loader.git"
+    "url": "git+ssh://git@github.com/danwashusen/webpack-amdi18n-loader.git"
   },
   "keywords": [
     "webpack",
@@ -18,14 +18,15 @@
   "author": "TooBug <i@toobug.net>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/futuweb/webpack-amdi18n-loader/issues"
+    "url": "https://github.com/danwashusen/webpack-amdi18n-loader/issues"
   },
-  "homepage": "https://github.com/futuweb/webpack-amdi18n-loader#readme",
+  "homepage": "https://github.com/danwashusen/webpack-amdi18n-loader#readme",
   "dependencies": {
     "coffee-loader": "^0.7.2",
     "coffee-script": "^1.12.2",
     "mocha": "^3.2.0",
     "should": "^11.1.2",
-    "webpack": "^1.14.0"
+    "webpack": "^1.14.0",
+    "underscore": "1.8.3"
   }
 }

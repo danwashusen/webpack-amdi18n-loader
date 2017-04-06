@@ -20,6 +20,7 @@ module.exports = function (content) {
 
 	var fs = require('fs');
 	var path = require('path');
+	var _ = require('underscore');
 	var target = this.resourcePath;
 	var targetPath = path.dirname(target);
 	var targetFileName = path.basename(target);
@@ -34,6 +35,23 @@ module.exports = function (content) {
 			json:'',
 			module : {},
 			exports : {}
+		};
+
+		var flattenBundle = function (bundle, target, prefix) {
+			target = target || {};
+			prefix = prefix || {};
+			_.each(bundle, function (value, key) {
+				key = prefix.length > 0 ? prefix + '.' + key : key;
+				if (_.isString(value)) {
+					target[key] = value;
+				}
+				if (_.isNumber(value)) {
+					target[key] = value + '';
+				} else if (_.isObject(value)) {
+					flattenBundle(value, target, key);
+				}
+			});
+			return target;
 		};
 
 		var mockDefine = function(id, dependencies, factory){
@@ -70,6 +88,11 @@ module.exports = function (content) {
 		}
 		var vmScript = new vm.Script(script);
 		vmScript.runInContext(context);
+
+		// flatten the root from a standard JSON object format to the desired dot notation
+		if (sandbox.json.root)
+			sandbox.json.root = flattenBundle(sandbox.json.root);
+
 		return sandbox.json;
 	};
 
@@ -136,16 +159,22 @@ module.exports = function (content) {
 				language = window._i18n.locale;
 			}else if(document.documentElement.lang){
 				language = document.documentElement.lang;
-			}else{
-				language = 'root';
 			}
 		}
-		var target = this['__' + language] || this.__root;
 
-		// copy definition to root level
-		if (target) {
-			for (var name in target) {
-				this[name] = target[name];
+		// copy base definitions to root level
+		for (var name in this.__root) {
+			this[name] = this.__root[name];
+		}
+
+		// copy the language varients to root level
+		if (language) {
+			var target = this['__' + language];
+
+			if (target) {
+				for (var name in target.root) {
+					this[name] = target.root[name];
+				}
 			}
 		}
 	};
